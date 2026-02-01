@@ -3,61 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rural Explorer | Property Data</title>
+    <title>Rural Explorer | Property Research</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    
-    <style>
-        #map { height: 450px; width: 100%; border-radius: 12px; z-index: 1; }
-        .property-card { transition: transform 0.2s; }
-        .property-card:hover { transform: translateY(-4px); border-color: #10b981; }
-    </style>
 </head>
 <body class="bg-gray-50 text-gray-900">
 
-    <header class="bg-slate-900 text-white p-6 shadow-xl sticky top-0 z-50">
+    <header class="bg-slate-900 text-white p-6 shadow-xl sticky top-0 z-[1000]">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
             <div>
                 <h1 class="text-2xl font-bold tracking-tight">RURAL<span class="text-emerald-400">EXPLORER</span></h1>
-                <p id="statusUpdate" class="text-xs text-slate-400 uppercase tracking-widest">Loading Feb012026 Data...</p>
+                <p id="statusUpdate" class="text-xs text-slate-400 uppercase tracking-widest font-bold">Initializing...</p>
             </div>
-            <select id="fileSelector" onchange="loadDataByFile(this.value)" class="bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 text-sm text-white focus:ring-2 focus:ring-emerald-500">
-                <option value="Feb012026">Feb 01, 2026</option>
-                </select>
+            <select id="fileSelector" class="bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 text-sm text-white focus:ring-2 focus:ring-emerald-500">
+                <option value="Feb012026">Snapshot: Feb 01, 2026</option>
+            </select>
         </div>
     </header>
 
     <main class="max-w-7xl mx-auto p-4 md:p-8">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex flex-col justify-center">
-                <h3 class="text-gray-500 text-sm font-semibold mb-2 uppercase">Value Analysis</h3>
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 min-h-[300px]">
+                <h3 class="text-gray-500 text-xs font-bold mb-4 uppercase tracking-widest">Market Value Analysis</h3>
                 <canvas id="marketChart"></canvas>
             </div>
-            <div id="map" class="lg:col-span-2 border border-gray-200"></div>
+            <div id="map" class="lg:col-span-2 shadow-md border border-gray-200"></div>
         </div>
 
         <div class="flex flex-col lg:flex-row gap-8">
-            <aside class="w-full lg:w-1/4 space-y-6">
+            <aside class="w-full lg:w-1/4">
                 <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 sticky top-28">
-                    <h2 class="font-bold text-lg mb-4">Market Stats</h2>
-                    <div id="statsSummary" class="space-y-3 text-sm text-gray-600">
-                        <div class="flex justify-between"><span>Avg Price:</span> <b id="avgPrice">$0</b></div>
-                        <div class="flex justify-between"><span>Avg Acreage:</span> <b id="avgAcres">0</b></div>
-                        <div class="flex justify-between"><span>High Score:</span> <b id="highScore" class="text-emerald-600">0</b></div>
-                    </div>
-                    <div class="mt-6 pt-6 border-t">
-                        <p class="text-xs text-gray-400 italic">Source: data/list/Feb012026.xlsx</p>
+                    <h2 class="font-bold text-lg mb-4 text-slate-800 border-b pb-2">Snapshot Stats</h2>
+                    <div id="statsSummary" class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-500 text-sm">Avg Price</span>
+                            <b id="avgPrice" class="text-slate-900">$0</b>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-500 text-sm">Avg Size</span>
+                            <b id="avgAcres" class="text-slate-900">0 ac</b>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-500 text-sm">Top Score</span>
+                            <b id="highScore" class="text-emerald-600">0</b>
+                        </div>
                     </div>
                 </div>
             </aside>
 
             <section class="w-full lg:w-3/4">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold" id="listingCount">0 Properties</h2>
-                </div>
+                <h2 class="text-2xl font-bold mb-6 text-slate-800" id="listingCount">0 Properties Found</h2>
                 <div id="listingGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     </div>
             </section>
@@ -65,126 +65,6 @@
     </main>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-    <script>
-        let currentData = [];
-        let map = L.map('map').setView([38.8, -77.5], 8);
-        let markers = L.layerGroup().addTo(map);
-        let chartInstance = null;
-
-        L.tileLayer('https://{s}.tile.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(map);
-
-        // --- THE EXCEL LOADER ---
-        async function loadDataByFile(fileName) {
-            const statusLabel = document.getElementById('statusUpdate');
-            const url = `data/list/${fileName}.xlsx`;
-            
-            try {
-                statusLabel.innerText = `Fetching ${fileName}...`;
-                const response = await fetch(url);
-                if (!response.ok) throw new Error("File not found");
-                
-                const arrayBuffer = await response.arrayBuffer();
-                const data = new Uint8Array(arrayBuffer);
-                const workbook = XLSX.read(data, { type: 'array' });
-
-                // Assume first sheet is the correct one
-                const firstSheetName = workbook.SheetNames[0];
-                const worksheet = workbook.Sheets[firstSheetName];
-                
-                // Convert to JSON
-                currentData = XLSX.utils.sheet_to_json(worksheet);
-                
-                statusLabel.innerText = `Data Updated: ${fileName}`;
-                renderUI();
-            } catch (err) {
-                console.error(err);
-                statusLabel.innerText = "Error loading data. Check file path.";
-            }
-        }
-
-        function renderUI() {
-            renderListings(currentData);
-            updateStats(currentData);
-            updateChart(currentData);
-        }
-
-        function renderListings(data) {
-            const grid = document.getElementById('listingGrid');
-            const count = document.getElementById('listingCount');
-            grid.innerHTML = '';
-            markers.clearLayers();
-            count.innerText = `${data.length} Properties Analyzed`;
-
-            data.forEach((p, idx) => {
-                const card = `
-                    <div class="property-card bg-white border border-gray-100 p-5 rounded-xl shadow-sm cursor-pointer" onclick="focusOn(${p.lat}, ${p.lng}, ${idx})">
-                        <div class="flex justify-between items-center mb-2 text-xs font-bold">
-                            <span class="text-emerald-600 bg-emerald-50 px-2 py-1 rounded">SCORE: ${p.score || 'N/A'}</span>
-                            <span class="text-gray-400">${p.type || 'Property'}</span>
-                        </div>
-                        <h3 class="text-xl font-bold text-slate-800">$${(p.price || 0).toLocaleString()}</h3>
-                        <p class="text-gray-500 text-sm mb-4">${p.address}, ${p.city}</p>
-                        <div class="flex gap-4 text-xs font-medium text-slate-600">
-                            <span>🌲 ${p.acres} Acres</span>
-                            <span>🚗 ${p.driveTime} min to Fairfax</span>
-                        </div>
-                        <a href="${p.url}" target="_blank" class="mt-4 block text-center text-xs text-emerald-600 font-bold hover:underline">VISIT ORIGINAL LISTING →</a>
-                    </div>
-                `;
-                grid.innerHTML += card;
-
-                if(p.lat && p.lng) {
-                    const m = L.circleMarker([p.lat, p.lng], {
-                        radius: 8,
-                        fillColor: "#10b981",
-                        color: "#fff",
-                        weight: 2,
-                        fillOpacity: 0.9
-                    }).bindPopup(`<b>$${p.price.toLocaleString()}</b><br>${p.address}`);
-                    markers.addLayer(m);
-                }
-            });
-            if(data.length > 0) map.fitBounds(markers.getBounds());
-        }
-
-        function updateStats(data) {
-            const prices = data.map(p => p.price).filter(p => p);
-            const acres = data.map(p => p.acres).filter(a => a);
-            const scores = data.map(p => p.score).filter(s => s);
-
-            if(prices.length) {
-                const avgP = prices.reduce((a,b) => a + b, 0) / prices.length;
-                const avgA = acres.reduce((a,b) => a + b, 0) / acres.length;
-                document.getElementById('avgPrice').innerText = `$${Math.round(avgP).toLocaleString()}`;
-                document.getElementById('avgAcres').innerText = `${avgA.toFixed(1)} ac`;
-                document.getElementById('highScore').innerText = Math.max(...scores);
-            }
-        }
-
-        function updateChart(data) {
-            const ctx = document.getElementById('marketChart').getContext('2d');
-            if(chartInstance) chartInstance.destroy();
-            
-            chartInstance = new Chart(ctx, {
-                type: 'scatter',
-                data: {
-                    datasets: [{
-                        label: 'Price per Acre vs Time',
-                        data: data.map(p => ({ x: p.driveTime, y: p.price / p.acres })),
-                        backgroundColor: '#10b981'
-                    }]
-                },
-                options: { responsive: true, plugins: { legend: { display: false } } }
-            });
-        }
-
-        function focusOn(lat, lng, idx) {
-            map.flyTo([lat, lng], 13);
-        }
-
-        // Initialize with Feb 01 data
-        loadDataByFile('Feb012026');
-    </script>
+    <script src="js/app.js"></script>
 </body>
 </html>
