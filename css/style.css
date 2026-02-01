@@ -1,31 +1,55 @@
-/* Custom map and card styling */
+/* 1. DYNAMIC COLOR VARIABLES */
+:root {
+    --bg-color: #f8fafc;
+    --text-main: #1e293b;      /* Dark text for light mode */
+    --text-heading: #0f172a;   /* Bold headings for light mode */
+    --card-bg: #ffffff;
+    --border-color: #e2e8f0;
+}
+
+[data-theme="dark"] {
+    --bg-color: #0f172a;       /* Deep navy background */
+    --text-main: #f1f5f9;      /* Bright white text for dark mode */
+    --text-heading: #38bdf8;   /* Sky blue headings for visibility */
+    --card-bg: #1e293b;        /* Lighter navy for cards */
+    --border-color: #334155;
+}
+
+/* 2. BASE STYLES */
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 2rem;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Fixes unreadable "Developer Dashboard" */
+h1, h2, h3 { 
+    color: var(--text-heading); 
+}
+
+.card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+/* 3. MAP BOX FIX */
 #map {
-    height: 100%;
-    min-height: 400px;
+    height: 400px;
     width: 100%;
-    border-radius: 16px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    margin-top: 1rem;
     z-index: 1;
 }
 
-.leaflet-container {
-    font-family: inherit;
-}
-
-/* Custom scrollbar for listing grid if needed */
-#listingGrid {
-    scroll-behavior: smooth;
-}
-
-.property-card {
-    border: 1px solid #f1f5f9;
-}
-
-/* Animation for cards */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.property-card {
-    animation: fadeIn 0.4s ease forwards;
+/* Dark Mode Tile Filter (Optional - makes map look high-tech) */
+[data-theme="dark"] .leaflet-tile-container {
+    filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3);
 }
