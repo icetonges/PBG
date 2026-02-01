@@ -1,18 +1,10 @@
 /* 1. DYNAMIC COLOR VARIABLES */
 :root {
     --bg-color: #f8fafc;
-    --text-main: #1e293b;      /* Dark text for light mode */
-    --text-heading: #0f172a;   /* Bold headings for light mode */
+    --text-main: #1e293b;
+    --text-heading: #0f172a;
     --card-bg: #ffffff;
     --border-color: #e2e8f0;
-}
-
-[data-theme="dark"] {
-    --bg-color: #0f172a;       /* Deep navy background */
-    --text-main: #f1f5f9;      /* Bright white text for dark mode */
-    --text-heading: #38bdf8;   /* Sky blue headings for visibility */
-    --card-bg: #1e293b;        /* Lighter navy for cards */
-    --border-color: #334155;
 }
 
 /* 2. BASE STYLES */
@@ -21,35 +13,36 @@ body {
     color: var(--text-main);
     font-family: 'Inter', sans-serif;
     margin: 0;
-    padding: 2rem;
+    padding: 0; /* Changed from 2rem to allow full-width responsiveness */
     transition: background-color 0.3s, color 0.3s;
 }
 
-/* Fixes unreadable "Developer Dashboard" */
 h1, h2, h3 { 
     color: var(--text-heading); 
 }
 
-.card {
+/* 3. CRITICAL MAP FIX */
+#map {
+    height: 400px !important; /* Force height */
+    width: 100% !important;
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+    z-index: 10;
+    background: #e5e7eb; /* Fallback gray while loading */
+}
+
+/* Fix for unrendered tiles in Leaflet */
+.leaflet-container {
+    height: 100% !important;
+    width: 100% !important;
+}
+
+.property-card {
     background-color: var(--card-bg);
     border: 1px solid var(--border-color);
-    padding: 1.5rem;
-    border-radius: 12px;
-    margin-bottom: 1rem;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    transition: transform 0.2s ease-in-out;
 }
 
-/* 3. MAP BOX FIX */
-#map {
-    height: 400px;
-    width: 100%;
-    border-radius: 12px;
-    border: 1px solid var(--border-color);
-    margin-top: 1rem;
-    z-index: 1;
-}
-
-/* Dark Mode Tile Filter (Optional - makes map look high-tech) */
-[data-theme="dark"] .leaflet-tile-container {
-    filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3);
+.property-card:hover {
+    transform: translateY(-4px);
 }
