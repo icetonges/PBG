@@ -1,67 +1,42 @@
-/* 1. DYNAMIC COLOR VARIABLES */
 :root {
     --bg-color: #f8fafc;
     --text-main: #1e293b;
-    --text-heading: #0f172a;
     --card-bg: #ffffff;
     --border-color: #e2e8f0;
 }
 
-/* 2. BASE STYLES */
 body {
     background-color: var(--bg-color);
     color: var(--text-main);
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     margin: 0;
-    padding: 0;
-    transition: background-color 0.3s, color 0.3s;
+    font-family: 'Inter', sans-serif;
 }
 
-h1, h2, h3 { 
-    color: var(--text-heading); 
-}
-
-/* 3. LEAFLET MAP FIXES */
 #map {
-    height: 450px !important; 
+    height: 450px !important;
     width: 100% !important;
     border-radius: 16px;
-    border: 1px solid var(--border-color);
     z-index: 10;
-    background: #e5e7eb; /* Visual feedback while tiles load */
+    background: #e2e8f0; /* Pre-load color */
 }
 
-/* Ensure map tiles fill container correctly */
+/* CRITICAL: Leaflet Tile Fix */
 .leaflet-container {
     height: 100% !important;
     width: 100% !important;
-    font-family: inherit;
+    background: #e2e8f0 !important;
 }
 
-/* 4. PROPERTY CARDS */
 .property-card {
     background-color: var(--card-bg);
     border: 1px solid var(--border-color);
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.2s ease-in-out;
+    display: flex;
+    flex-direction: column;
 }
 
 .property-card:hover {
     transform: translateY(-4px);
     border-color: #10b981;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-}
-
-/* 5. CHART RESPONSIVENESS */
-#marketChart {
-    max-width: 100%;
-}
-
-/* 6. UTILITIES */
-.animate-pulse-slow {
-    animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-@keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: .5; }
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
 }

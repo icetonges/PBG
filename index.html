@@ -19,11 +19,11 @@
             <div>
                 <h1 class="text-2xl font-black tracking-tighter italic">RURAL<span class="text-emerald-400">EXPLORER</span></h1>
                 <div class="flex items-center gap-2 mt-1">
-                    <span id="statusLed" class="w-2.5 h-2.5 rounded-full bg-yellow-500 animate-pulse border border-white/20"></span>
-                    <p id="statusUpdate" class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Initializing System...</p>
+                    <span id="statusLed" class="w-2.5 h-2.5 rounded-full bg-yellow-500 animate-pulse"></span>
+                    <p id="statusUpdate" class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">System Booting...</p>
                 </div>
-                <p id="pathTrace" class="text-[9px] font-mono text-slate-500 mt-1 bg-slate-950 px-2 py-0.5 rounded inline-block border border-slate-800">
-                    Locating data/list/Feb012026.xlsx...
+                <p id="pathTrace" class="text-[9px] font-mono text-slate-500 mt-1 bg-slate-950 px-2 py-0.5 rounded inline-block">
+                    Path: Ready
                 </p>
             </div>
             <div class="flex items-center gap-4">
@@ -39,7 +39,7 @@
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col min-h-[350px]">
                 <div class="flex justify-between items-center mb-4">
                     <h3 class="text-slate-500 text-[10px] font-black uppercase tracking-widest">Market Value Frontier</h3>
-                    <span class="text-[10px] bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded">$/Acre vs Distance</span>
+                    <span class="text-[10px] bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded">$/Acre Analysis</span>
                 </div>
                 <div class="flex-grow relative">
                     <canvas id="marketChart"></canvas>
@@ -52,7 +52,6 @@
             <aside class="w-full lg:w-1/4 space-y-6">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 sticky top-32">
                     <h2 class="font-bold text-lg mb-6 text-slate-800 border-b border-slate-50 pb-2">Market Intelligence</h2>
-                    
                     <div id="statsSummary" class="space-y-4 mb-8">
                         <div class="flex justify-between items-end">
                             <span class="text-gray-400 text-xs font-bold uppercase">Avg Entry</span>
@@ -63,17 +62,9 @@
                             <b id="avgAcres" class="text-slate-900 text-lg">$0/ac</b>
                         </div>
                     </div>
-
                     <div class="bg-slate-900 rounded-xl p-4 text-white shadow-inner">
                         <h4 class="text-[10px] font-black text-emerald-400 uppercase tracking-widest mb-2">Automated Analysis</h4>
-                        <div id="marketNarrative" class="text-xs leading-relaxed text-slate-300 italic">
-                            Waiting for data stream...
-                        </div>
-                    </div>
-
-                    <div class="mt-8">
-                        <h4 class="text-slate-400 text-[10px] font-black uppercase tracking-widest mb-4">Top Strategic Picks</h4>
-                        <div id="topPicks" class="space-y-3"></div>
+                        <div id="marketNarrative" class="text-xs leading-relaxed text-slate-300 italic">Waiting...</div>
                     </div>
                 </div>
             </aside>
