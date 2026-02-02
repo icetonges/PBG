@@ -169,5 +169,5 @@ function renderChart() {
 
 window.addEventListener('DOMContentLoaded', () => {
     initMap();
-    loadExcelData('Feb012026.xlsx');
+    loadExcelData('data/list/Feb012026.xlsx');
 });
