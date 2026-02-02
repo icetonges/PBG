@@ -23,12 +23,12 @@
                     <p id="statusUpdate" class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Initializing System...</p>
                 </div>
                 <p id="pathTrace" class="text-[9px] font-mono text-slate-500 mt-1 bg-slate-950 px-2 py-0.5 rounded inline-block border border-slate-800">
-                    Path: standby...
+                    Locating data/list/Feb012026.xlsx...
                 </p>
             </div>
             <div class="flex items-center gap-4">
-                <select id="fileSelector" class="bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 text-sm text-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all cursor-pointer">
-                    <option value="Feb012026">Snapshot: Feb 01, 2026</option>
+                <select id="fileSelector" class="bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 text-sm text-white focus:ring-2 focus:ring-emerald-500 outline-none cursor-pointer">
+                    <option value="Feb012026.xlsx">Snapshot: Feb 01, 2026</option>
                 </select>
             </div>
         </div>
@@ -73,29 +73,17 @@
 
                     <div class="mt-8">
                         <h4 class="text-slate-400 text-[10px] font-black uppercase tracking-widest mb-4">Top Strategic Picks</h4>
-                        <div id="topPicks" class="space-y-3">
-                            </div>
+                        <div id="topPicks" class="space-y-3"></div>
                     </div>
                 </div>
             </aside>
 
             <section class="w-full lg:w-3/4">
-                <div class="flex justify-between items-end mb-8">
-                    <div>
-                        <h2 class="text-3xl font-black text-slate-900 tracking-tight" id="listingCount">Discovery Engine</h2>
-                        <p class="text-slate-400 text-sm">Curated listings matching outdoor-lifestyle criteria.</p>
-                    </div>
-                </div>
-                
-                <div id="listingGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    </div>
+                <h2 class="text-3xl font-black text-slate-900 mb-6" id="listingCount">Discovery Engine</h2>
+                <div id="listingGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
             </section>
         </div>
     </main>
-
-    <footer class="max-w-7xl mx-auto p-8 text-center text-slate-400 text-[10px] font-bold uppercase tracking-widest">
-        &copy; 2026 Rural Explorer | Decision Support System v2.1
-    </footer>
 
     <script src="app.js"></script>
 </body>
